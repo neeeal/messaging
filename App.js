@@ -6,8 +6,8 @@ import IME from './components/IME';
 export default function App() {
   return (
     <>
-      <Status></Status>
       <View style={styles.container}>
+        <Status></Status>
         <View style={styles.content}>
           <IME></IME>
           <Toolbar></Toolbar>  
