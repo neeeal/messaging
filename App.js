@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Status from './components/StatusBar';
 import Toolbar from './components/ToolBar';
 import IME from './components/IME';
+import React from 'react';
 
 export default function App() {
   return (
@@ -9,7 +10,9 @@ export default function App() {
       <View style={styles.container}>
         <Status></Status>
         <View style={styles.content}>
-          <IME></IME>
+          <Text>Neal Barton James J. Matira</Text>
+          <IME>
+          </IME>
           <Toolbar></Toolbar>  
         </View>
       </View>
