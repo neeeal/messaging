@@ -1,48 +1,98 @@
-import { BackHandler, StyleSheet, Text, View } from 'react-native';
-import Status from './components/StatusBar';
-import Toolbar from './components/ToolBar';
+import { BackHandler, StyleSheet, Text, View, Image, TouchableHighlight, Alert,ImageBackground } from 'react-native';
+import Status from './components/Statusbar';
+import Toolbar from './components/Toolbar';
 import IME from './components/IME';
 import MessageList from './components/MessageList';
-import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MesssageUtils';
-import React from 'react';
-
-state = {
-  messages: [
-    createImageMessage('https://unspash.it/300/300'), 
-    createLocationMessage('World'), 
-    createTextMessage('Hello'),
-    createLocationMessage({
-      longitude:37.78825,
-      longitude:-122.4324
-    })
-  ]
-}
-
-handlePressMessage = () => {
-
-}
-
-renderMessageList = () => {
-  const { messages } = this.state;
-  return (
-    <View style = {styles.content}>
-      <MessageList messages={messages}
-      onpressMessage={handlePressMessage}/>
-    </View>
-  )
-}
-
+import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
+import React, {useState} from 'react';
+// import { ImageBackground } from 'react-native-web';
 
 export default function App() {
+  const [messages, setMessages] = useState([
+    createImageMessage('https://unsplash.it/500/500'), 
+    createTextMessage('World'), 
+    createTextMessage('Hello'),
+    createTextMessage('Kimberly'),
+    createLocationMessage({
+      latitude: 37.78825,
+      longitude: -122.4324,
+    })
+  ]);
+
+  const [fullscreenImageId, setFullscreenImageId] = useState(null);
+
+  const dismissFullscreenImage = () => {
+    setFullscreenImageId(null);
+  };
+  
+  const handlePressMessage = ({id, type}) => {
+    switch (type) {
+      case 'text':
+        alertDelete(id)
+        break
+      case 'image':
+        setFullscreenImageId(id)
+        break
+      default:
+        break
+    }
+  };
+
+  const renderFullscreenImage = () => {
+    
+    if (!fullscreenImageId) return null;
+    const image = messages.find (message => message.id === fullscreenImageId);
+    if (!image) return null;
+    const { uri } = image;
+    
+    return (
+      <TouchableHighlight style={styles.fullscreenOverlay}
+      onPress={dismissFullscreenImage}>
+          <Image style={styles.fullscreenImage} source={{ uri }} />
+      </TouchableHighlight>
+    )
+  }
+  
+  const renderMessageList = () => {
+    // const { messages } = state;
+    return (
+      <MessageList messages={messages} onPressMessage={handlePressMessage} />
+    );
+  };
+  
+  const alertDelete = (id) => {
+    Alert.alert('Delete Message', 'Are you sure?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => {
+          deleteMessage(id);
+        },
+      },
+    ]);
+  };
+
+  const deleteMessage = (id) => {
+    // Create a new array without the message to be deleted
+    const updatedMessages = messages.filter((message) => message.id !== id);
+    setMessages(updatedMessages);
+  };
+
   return (
     <>
       <View style={styles.container}>
-        <Status></Status>
+        <Status />
         <View style={styles.content}>
-          <Text>Neal Barton James J. Matira</Text>
-          <IME>
-          </IME>
-          <Toolbar></Toolbar>  
+        <ImageBackground source={require('./assets/dreamy-clouds.png')} style={{height:'100%'}}>
+          {/* <IME /> */}
+          {renderMessageList()}
+          {renderFullscreenImage()}
+          {/* <Toolbar /> */}
+          </ImageBackground>
         </View>
       </View>
     </>
@@ -52,10 +102,19 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#abcdef',
   },
   content: {
     flex: 1,
     backgroundColor: '#fff',
   },
+  fullscreenOverlay: {
+    height:'100%',
+    width:'100%',
+    backgroundColor: '#161616',
+  },
+  fullscreenImage: {
+    flex:1,
+    resizeMode: 'contain'
+  }
 });

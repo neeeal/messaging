@@ -4,10 +4,14 @@ export const MessageShape = PropTypes.shape({
     id:PropTypes.number.isRequired,
     type:PropTypes.oneOf(['text','image','location']), text: PropTypes.string,
     uri:PropTypes.string,
-    coordinate: PropTypes.shape({
+    coordinates:PropTypes.shape({
         latitude: PropTypes.number.isRequired,
-        longitude: PropTypes.number.isRequired,
+        longitude:PropTypes.number.isRequired,
     })
+    // coordinate: PropTypes.shape({
+    //     latitude: PropTypes.number.isRequired,
+    //     longitude: PropTypes.number.isRequired,
+    // })
 })
 
 let messageId = 0
@@ -33,10 +37,18 @@ export function createImageMessage(uri) {
     }
 }
 
-export function createLocationMessage(coordinate) {
+export function createLocationMessage(coordinate){
     return {
-        type: 'location',
-        id: getNextId(),
-        coordinate
+        type:'location',
+        id:getNextId(),
+        coordinate,
     }
 }
+
+// export function createLocationMessage(coordinate) {
+//     return {
+//         type: 'location',
+//         id: getNextId(),
+//         coordinate
+//     }
+// }

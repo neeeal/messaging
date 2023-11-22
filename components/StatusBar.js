@@ -25,7 +25,7 @@ const FadeInView = props => {
   );
 };
 
-export default class Status extends Component {
+export default class Status extends React.Component {
   state = {
     info: null,
     isConnected: true,
