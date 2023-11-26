@@ -1,7 +1,7 @@
 import { BackHandler, StyleSheet, Text, View, Image, TouchableHighlight, Alert,ImageBackground } from 'react-native';
-import Status from './components/Statusbar';
-import Toolbar from './components/Toolbar';
+import Status from './components/StatusBar';
 import IME from './components/IME';
+import Toolbar from './components/Toolbar';
 import MessageList from './components/MessageList';
 import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
 import React, {useState} from 'react';
@@ -21,6 +21,25 @@ export default function App() {
 
   const [fullscreenImageId, setFullscreenImageId] = useState(null);
 
+  const [isInputFocused, setIsInputFocused] = useState(false);  
+
+  const handlePressToolbarCamera = () => {
+    // ...
+    };
+
+    const handlePressToolbarLocation = () => {
+    // ...
+    };
+
+    const handleChangeFocus = (isFocused) => {
+    setIsInputFocused(isFocused);
+    };
+
+    const handleSubmit = (text) => {
+      // Use the local 'messages' variable directly, no need for 'this.state'
+      setMessages([...messages, createTextMessage(text)]);
+    };
+
   const dismissFullscreenImage = () => {
     setFullscreenImageId(null);
   };
@@ -32,6 +51,7 @@ export default function App() {
         break
       case 'image':
         setFullscreenImageId(id)
+        setIsInputFocused(false)
         break
       default:
         break
@@ -82,6 +102,22 @@ export default function App() {
     setMessages(updatedMessages);
   };
 
+  const renderToolbar = () => {
+    // const { isInputFocused } = this.state;
+    return (
+    <View style={styles.toolbar}>
+    <Toolbar
+    isFocused={isInputFocused}
+    onSubmit={handleSubmit}
+    onChangeFocus={handleChangeFocus}
+    onPressCamera={this.handlePressToolbarCamera}
+    onPressLocation={this.handlePressToolbarLocation}
+    /><Text>{" "}</Text>
+    </View>
+    );
+    }
+
+    
   return (
     <>
       <View style={styles.container}>
@@ -92,6 +128,7 @@ export default function App() {
           {renderMessageList()}
           {renderFullscreenImage()}
           {/* <Toolbar /> */}
+          {renderToolbar()}
           </ImageBackground>
         </View>
       </View>
