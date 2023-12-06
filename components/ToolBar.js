@@ -59,16 +59,20 @@ export default class Toolbar extends React.Component {
     const { onChangeFocus } = this.props;
     onChangeFocus(false)
   }
+  handlePressLocation = () => {
+    console.log("Toolbar - OnPressLocation called");
+    const { OnPressLocation } = this.props;
+    OnPressLocation();
+  };
   render() {
       const { onPressCamera, OnPressLocation} = this.props;
       const { text } = this.state
+      console.log(OnPressLocation())
       return (
         <View style={styles.toolbar}>
-          {/* <Text>😀</Text>  */}
-          <Text>📷</Text>
-          <ToolbarButton title={''} onPress={onPressCamera} />
-          <Text>🗺</Text>
-          <ToolbarButton title={''} onPress={OnPressLocation} />
+          
+          <ToolbarButton title={'📷'} onPress={onPressCamera} />
+          <ToolbarButton title={'🗺'} onPress={this.handlePressLocation} />
           <View style={styles.inputContainer}>
             <TextInput 
               style={styles.input}
@@ -83,7 +87,6 @@ export default class Toolbar extends React.Component {
               onFocus={this.handleFocus}
               onBlur={this.handleBlur}
               />
-               {/* <Text>{"Kimberly B. Pangilinan"}</Text> */}
           </View>
         </View>
       )

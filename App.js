@@ -1,11 +1,13 @@
 import { BackHandler, StyleSheet, Text, View, Image, TouchableHighlight, Alert,ImageBackground } from 'react-native';
-import Status from './components/StatusBar';
+import Status from './components/Statusbar';
 import IME from './components/IME';
-import Toolbar from './components/Toolbar';
+import Toolbar from './components/ToolBar';
 import MessageList from './components/MessageList';
 import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
 import React, {useState} from 'react';
 // import { ImageBackground } from 'react-native-web';
+import * as Location from 'expo-location';
+// import { navigator } from 'react-native-navigation';
 
 export default function App() {
   const [messages, setMessages] = useState([
@@ -18,8 +20,9 @@ export default function App() {
       longitude: -122.4324,
     })
   ]);
+  
 
-  const [fullscreenImageId, setFullscreenImageId] = useState(null);
+  const [fullscreenImageId, setFullscreenImageId] = useState(null);              
 
   const [isInputFocused, setIsInputFocused] = useState(false);  
 
@@ -27,8 +30,23 @@ export default function App() {
     // ...
     };
 
-    const handlePressToolbarLocation = () => {
-    // ...
+    const handlePressToolbarLocation = async () => {
+      console.log("App.js - handlePressToolbarLocation called");
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        console.log("Permission status:", status);
+    
+        if (status !== 'granted') {
+          console.log('Permission to access location was denied.');
+          return;
+        }
+    
+        let location = await Location.getCurrentPositionAsync({});
+        console.log("Location:", location);
+        setMessages([...messages, createLocationMessage(location)]);
+      } catch (error) {
+        console.error("Error in handlePressToolbarLocation:", error);
+      }
     };
 
     const handleChangeFocus = (isFocused) => {
@@ -111,7 +129,7 @@ export default function App() {
     onSubmit={handleSubmit}
     onChangeFocus={handleChangeFocus}
     onPressCamera={this.handlePressToolbarCamera}
-    onPressLocation={this.handlePressToolbarLocation}
+    onPressLocation={handlePressToolbarLocation}
     /><Text>{" "}</Text>
     </View>
     );
