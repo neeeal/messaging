@@ -1,6 +1,7 @@
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import React from 'react';
+import * as Location from 'expo-location';
 
 const ToolbarButton = ({ title, onPress }) => (
   <TouchableOpacity onPress={onPress}>
@@ -18,7 +19,7 @@ export default class Toolbar extends React.Component {
     onChangeFocus: PropTypes.func,
     onSubmit: PropTypes.func,
     onPressCamera: PropTypes.func,
-    OnPressLocation: PropTypes.func,
+    onPressLocation: PropTypes.func,
   }
   static defaultProps = {
     onChangeFocus: () => {},
@@ -59,20 +60,29 @@ export default class Toolbar extends React.Component {
     const { onChangeFocus } = this.props;
     onChangeFocus(false)
   }
-  handlePressLocation = () => {
-    console.log("Toolbar - OnPressLocation called");
-    const { OnPressLocation } = this.props;
-    OnPressLocation();
+  handleOnPressLocation = async () => {
+    const { onPressLocation} = this.props;
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if ( status !== 'granted'){
+      console.log('Permission to access location was denied')
+      return
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    console.log({'latitude': location.coords.latitude, 
+                'longitude': location.coords.longitude})
+    onPressLocation({'latitude': location.coords.latitude, 
+    'longitude': location.coords.longitude})
   };
+
   render() {
-      const { onPressCamera, OnPressLocation} = this.props;
+      const { onPressCamera, onPressLocation} = this.props;
       const { text } = this.state
       console.log(OnPressLocation())
       return (
         <View style={styles.toolbar}>
-          
+          {/* <Text>😀</Text>  */}
           <ToolbarButton title={'📷'} onPress={onPressCamera} />
-          <ToolbarButton title={'🗺'} onPress={this.handlePressLocation} />
+          <ToolbarButton title={'🗺'} onPress={this.handleOnPressLocation} />
           <View style={styles.inputContainer}>
             <TextInput 
               style={styles.input}

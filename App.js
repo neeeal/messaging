@@ -30,23 +30,8 @@ export default function App() {
     // ...
     };
 
-    const handlePressToolbarLocation = async () => {
-      console.log("App.js - handlePressToolbarLocation called");
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        console.log("Permission status:", status);
-    
-        if (status !== 'granted') {
-          console.log('Permission to access location was denied.');
-          return;
-        }
-    
-        let location = await Location.getCurrentPositionAsync({});
-        console.log("Location:", location);
-        setMessages([...messages, createLocationMessage(location)]);
-      } catch (error) {
-        console.error("Error in handlePressToolbarLocation:", error);
-      }
+    const handlePressToolbarLocation = (location) => {
+      setMessages([...messages, createLocationMessage(location)]);
     };
 
     const handleChangeFocus = (isFocused) => {
