@@ -77,7 +77,7 @@ export default class Toolbar extends React.Component {
   render() {
       const { onPressCamera, onPressLocation} = this.props;
       const { text } = this.state
-      console.log(OnPressLocation())
+      // console.log(OnPressLocation())
       return (
         <View style={styles.toolbar}>
           {/* <Text>😀</Text>  */}
