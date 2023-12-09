@@ -72,7 +72,7 @@ export default class Toolbar extends React.Component {
                 'longitude': location.coords.longitude})
     onPressLocation({'latitude': location.coords.latitude, 
     'longitude': location.coords.longitude})
-  };
+  }; 
 
   render() {
       const { onPressCamera, onPressLocation} = this.props;
