@@ -1,7 +1,7 @@
 import { BackHandler, StyleSheet, Text, View, Image, TouchableHighlight, Alert,ImageBackground } from 'react-native';
-import Status from './components/StatusBar';
+import Status from './components/Statusbar';
 import IME from './components/IME';
-import Toolbar from './components/Toolbar';
+import Toolbar from './components/ToolBar';
 import MessageList from './components/MessageList';
 import { createImageMessage, createLocationMessage, createTextMessage } from './utils/MessageUtils';
 import React, {useState} from 'react';
@@ -27,8 +27,8 @@ export default function App() {
     // ...
     };
 
-    const handlePressToolbarLocation = () => {
-    // ...
+    const handlePressToolbarLocation = (location) => {
+      setMessages([...messages, createLocationMessage(location)]);
     };
 
     const handleChangeFocus = (isFocused) => {
@@ -111,7 +111,7 @@ export default function App() {
     onSubmit={handleSubmit}
     onChangeFocus={handleChangeFocus}
     onPressCamera={this.handlePressToolbarCamera}
-    onPressLocation={this.handlePressToolbarLocation}
+    onPressLocation={handlePressToolbarLocation}
     /><Text>{" "}</Text>
     </View>
     );
